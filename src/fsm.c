@@ -71,7 +71,7 @@ static inline int8_t _FSM_CheckGuards(FSMTransition_t *transitions, void *pData)
             {
                 guardCnt = -1;
                 break;
-            }
+            } 
         }
         guard++;
     }

@@ -4,6 +4,7 @@ import shutil
 import re
 import collections
 import fileinput
+import pprint
 from datetime import datetime, date, time
 from os.path import basename
 
@@ -137,19 +138,24 @@ class State:
 
     def addTransition(self, row):
         row.rstrip()
+        #print "parse row: " + row
+        if not row.startswith('{'): print "Wrong start"
+        if not row.endswith('}'):  print "wrong end"
+
         if (row.startswith('{') and row.endswith('}') ):
             row = row.replace('{','')
             row = row.replace('}','')
             part = row.split(';')
 
             if self.type == 'STATE':
+                print "Transition: " + part[0] +" "+ part[1] +" "+ part[2] +" "+ part[3]
                 t = TransitionState(part[0], part[1], part[2], part[3])
             elif self.type == 'CHOICE':
                 t = TransitionChoice(part[0], part[1], part[2])
 
             self.transitions.append(t)
-#        else:
-#            print "addTransition: ERROR,"
+        else:
+            print "addTransition: ERROR,"
     
     def dump(self):
         print("type: {0}".format(self.type))
@@ -360,14 +366,8 @@ def RowContainsStartOfState(_row):
     keyword = _row.split(' ')
     if (keyword[0] in listStateTypes):
         return keyword[0], keyword[1]
-    return 0
-    
-#------------------------------------------------------------------------------
-def RowContainsEndOfState(row):
-    if(row[0] == '}'):
-        return 1
-    return 0
-    
+    return None, None
+   
 #------------------------------------------------------------------------------
 def ReadFile(fname, _SM):
     with open(fname,'r') as f:
@@ -380,26 +380,37 @@ def ReadFile(fname, _SM):
     
     for row in filecontent:
         row = row.rstrip('\n')
+        row = row.rstrip('\r')
         row = row.strip(' ')
         row = row.strip('\t')
-        if( (len(row)>0) and
+        if( (len(row)>0) and        # line always contains '\r'
             (row.startswith('//') == False ) ):
-        
-            if(idx == 1):         #Search start of State
+
+            #print "Read row: " + str(len(row)) + "\t " + row
+
+            if(idx == 1):           #Search start of State
                 type, name = RowContainsStartOfState(row)
-                if (type != 0) :
+                if (type != None) :
+                    print "\nState     :  " + name
                     S = State(_SM, name, type)
                     idx = 2
 
-            elif (idx == 2):      #Get all transitions
-                if RowContainsEndOfState(row):
+            elif (idx == 2):        #Search start of event list '{'
+                if row.startswith("{"):
+                    idx = 3
+                else:               #add transition
+                    print "ERROR: do expect { after declaration of new state or choice"
+
+            elif (idx == 3):        #If end of event-list '}' is found, start again
+                if(len(row)==1 and row.startswith("}")):
                     _SM.addState(S)
-                    idx = 1
+                    idx=1
                     type = 'unknown!'
                     name = 'unknown!'
                 else:               #add transition
                     S.addTransition(row)
-                    
+
+
 #==============================================================================
 if __name__ == "__main__":
     filename=""

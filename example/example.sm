@@ -1,0 +1,15 @@
+STATE bla::start
+{
+    { buttonPressed;    guard1, guard3; action1;    kies1}
+    { Abort;            guard2;         action2;    blabla}
+}
+
+STATE blabla
+{
+    { Reset;            guard3;         action3;    bla}
+}
+
+CHOICE kies1
+{
+    { choice1; {guards};{actions}, nextState}
+}

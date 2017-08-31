@@ -8,5 +8,5 @@ include_directories("inc")
 set(srcs src/fsm.c)
 
 #Add Library
-add_library(fsm_engine SHARED ${srcs})
+add_library(fsm_engine ${srcs})
 target_link_libraries(fsm_engine fifo)

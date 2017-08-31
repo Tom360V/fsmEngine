@@ -1,3 +1,6 @@
 [submodule "test/external/fifo"]
 	path = test/external/fifo
 	url = https://github.com/tom360v/fifo
+[submodule "example/external/fifo"]
+	path = example/external/fifo
+	url = https://github.com/tom360v/fifo
