@@ -1,7 +1,7 @@
 /*
  * example_sm_private.h
  *
- * Created: Thursday 31. August 2017 - 10:25:42
+ * Created: Thursday 31. August 2017 - 10:38:50
  *  Author: Tom
  */ 
 #ifndef EXAMPLE_SM_PRIVATE_H_
@@ -33,10 +33,11 @@ typedef enum
 /******************************************************************************
  * STATEMACHINE GUARDS
  */
-int8_t example_choice1(void *p);
 int8_t example_guard1(void *p);
 int8_t example_guard2(void *p);
 int8_t example_guard3(void *p);
+int8_t example_guardsChoice1(void *p);
+int8_t example_guardsChoice2(void *p);
 
  /******************************************************************************
  * STATEMACHINE ACTIONS
@@ -44,7 +45,6 @@ int8_t example_guard3(void *p);
 void example_action1(void *p);
 void example_action2(void *p);
 void example_action3(void *p);
-void example_guards(void *p);
  
  /******************************************************************************
  * STATEMACHINE TABLE
@@ -52,9 +52,13 @@ void example_guards(void *p);
 static const FSMTransition_t example_Statebla[] = {
 	{	example_ebuttonPressed, 	example_eStatekies1,
 		{2, (FSM_fpGuard_t []){example_guard1, example_guard3} },
-		{1, (FSM_fpAction_t[]){example_action1} }
+		{2, (FSM_fpAction_t[]){example_action1, example_action3} }
 	},
 	{	example_eAbort, 	example_eStateblabla,
+		{1, (FSM_fpGuard_t []){example_guard2} },
+		{1, (FSM_fpAction_t[]){example_action2} }
+	},
+	{	example_eReset, 	example_eStatebla,
 		{1, (FSM_fpGuard_t []){example_guard2} },
 		{1, (FSM_fpAction_t[]){example_action2} }
 	},
@@ -68,9 +72,13 @@ static const FSMTransition_t example_Stateblabla[] = {
 };
 
 static const FSMTransition_t example_Statekies1[] = {
-	{	example_eStateactions, nextState,
-		{1, (FSM_fpGuard_t []){example_choice1} },
-		{1, (FSM_fpAction_t[]){example_guards} }
+	{	example_eStatebla,
+		{1, (FSM_fpGuard_t []){example_guardsChoice1} },
+		{2, (FSM_fpAction_t[]){example_action1, example_action2} }
+	},
+	{	example_eStateblabla,
+		{1, (FSM_fpGuard_t []){example_guardsChoice2} },
+		{1, (FSM_fpAction_t[]){example_action2} }
 	},
 };
 
@@ -80,7 +88,7 @@ static const FSMTransition_t example_Statekies1[] = {
  * STATEMACHINE TABLE
  */
 static const FSMState_t example_table[] = { FSM_ADDSTATE(example_Statebla), FSM_ADDSTATE(example_Stateblabla), FSM_ADDSTATE(example_Statekies1) };
-static FSMTable_t example_tableData = {ERROR, FSM_ADDTABLE(example_table)};
+static FSMTable_t example_tableData = {example_eStatebla, FSM_ADDTABLE(example_table)};
 
 /******************************************************************************
  * PRIVATE VARIABLE

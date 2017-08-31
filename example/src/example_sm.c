@@ -1,7 +1,7 @@
 /*
  * example_sm.c
  *
- * Created: Thursday 31. August 2017 - 10:25:42
+ * Created: Thursday 31. August 2017 - 10:38:50
  *  Author: Tom
  */ 
 #include <stdint.h>
@@ -12,16 +12,6 @@
 /******************************************************************************
  * LOCAL VARIABLE AND STRUCTS
  */
-
-/*******************************************************************************
- * GUARD
- */
-int8_t example_choice1(void *p)
-{
-    (void)p;
-    //enter your code here
-    return FSM_FALSE;
-}
 
 /*******************************************************************************
  * GUARD
@@ -53,6 +43,26 @@ int8_t example_guard3(void *p)
     return FSM_FALSE;
 }
 
+/*******************************************************************************
+ * GUARD
+ */
+int8_t example_guardsChoice1(void *p)
+{
+    (void)p;
+    //enter your code here
+    return FSM_FALSE;
+}
+
+/*******************************************************************************
+ * GUARD
+ */
+int8_t example_guardsChoice2(void *p)
+{
+    (void)p;
+    //enter your code here
+    return FSM_FALSE;
+}
+
 
 /*******************************************************************************
  * ACTION
@@ -76,15 +86,6 @@ void example_action2(void *p)
  * ACTION
  */
 void example_action3(void *p)
-{
-    (void)p;
-    //enter your code here
-}
-
-/*******************************************************************************
- * ACTION
- */
-void example_guards(void *p)
 {
     (void)p;
     //enter your code here
